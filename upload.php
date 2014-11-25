@@ -1,7 +1,8 @@
 <?php
 	if(isset($_POST)){
 		//ディレクトリ作成
-		$date = date("YmdHi");
+		//$date = date("YmdHi");
+		$date = htmlspecialchars($_POST['folder_name']);
 		if(!is_dir("./".$date)){
 			mkdir("./".$date);
 			chmod("./".$date, 0777);
@@ -13,8 +14,7 @@
 
 		$pageVal = 0;
 		$extension = 0;
-		$j = 0;
-		
+
 		//アップが確認されたらスライド生成
 		if(isset($_FILES["image_file"])){
 			$data = getReformFilesData();
@@ -23,15 +23,10 @@
 			foreach ($data as $v) {
 				$i++;
 				$ext = end(explode('.', $v["name"]));
-				$filename = $i.".".$ext;
+				$filename = num2str($i).".".$ext;
 				$filepath = './'.$date.'/images/'.$filename;
 		
 				$result = @move_uploaded_file( $v["tmp_name"], $filepath);
-				if($result){
-					//echo '<div class="thumb"><img src="'.$filepath.'" width="200"/></div>';
-				}else{
-					//echo 'エラー<br/>'.$result;
-				}
 			}
 			
 			$pageVal = count($data);
@@ -60,7 +55,7 @@
 
 		$linkArray = array();
 		for($i=1;$i<=$slidetotal;$i++){
-			array_push($linkArray, '<a href="./html/'.$i.'.html" target="_blank">'.$i.'</a>');
+			array_push($linkArray, '<a href="./html/'.num2str($i).'.html" target="_blank">0'.$i.'</a>');
 		}
 
 		$portal = str_replace("<%SLIDELINK>", join(" ", $linkArray), $portal);
@@ -76,22 +71,22 @@
 			$contents = file_get_contents("./template_slide.php");
 			$filepath = './'.$date.'/images/'.$filename;
 			$htmlpath = './'.$date.'/html/';
-	
-			$contents = str_replace("<%PAGETITLE>", $date."_".$i, $contents);
-			$contents = str_replace("<%PAGECURRENT>", $i, $contents);
-			$contents = str_replace("<%PAGEMAX>", $pagemax, $contents);
-			$contents = str_replace("<%PAGECONTENTS>", '../images/'.$i.".".$ext, $contents);
+
+			$contents = str_replace("<%PAGETITLE>", num2str($i), $contents);
+			//$contents = str_replace("<%PAGECURRENT>", $page, $contents);
+			$contents = str_replace("<%PAGECONTENTS>", '../images/'.num2str($i).".".$ext, $contents);
+			$contents = str_replace("<%PAGEMAX>", num2str($pagemax), $contents);
 			if(($i-1) == 0){
-				$contents = str_replace("<%PAGEPREV>", $pagemax, $contents);
+				$contents = str_replace("<%PAGEPREV>", num2str($pagemax), $contents);
 			}else{
-				$contents = str_replace("<%PAGEPREV>", ($i-1), $contents);
+				$contents = str_replace("<%PAGEPREV>", num2str($i-1), $contents);
 			}
 			if(($i+1) > $pagemax){
-				$contents = str_replace("<%PAGENEXT>", 1, $contents);
+				$contents = str_replace("<%PAGENEXT>", "01", $contents);
 			}else{
-				$contents = str_replace("<%PAGENEXT>", ($i+1), $contents);
+				$contents = str_replace("<%PAGENEXT>", num2str($i+1), $contents);
 			}
-			$handle = fopen($htmlpath.$i.".html", "w");
+			$handle = fopen($htmlpath.num2str($i).".html", "w");
 			fwrite($handle, $contents);
 			fclose($handle);
 		}
@@ -115,7 +110,7 @@
 
 	//zip圧縮関数
 	function zipComp($source, $destination){
-		if (extension_loaded('zip') === true){	
+		if (extension_loaded('zip') === true){
 			if (file_exists($source) === true){
 				$zip = new ZipArchive();
 				if ($zip->open($destination, ZIPARCHIVE::CREATE) === true){
@@ -139,5 +134,16 @@
 			}
 		}
 		return false;
+	}
+
+	function num2str($number){
+		$str = "";
+		if($number < 10){
+			$str = "0".$number;
+		}else{
+			$str = (string)$number;
+		}
+
+		return $str;
 	}
 ?>

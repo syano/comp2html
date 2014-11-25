@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="Content-Script-Type" content="text/javascript">
 		<meta http-equiv="Content-Style-Type" content="text/css">
-		<title>comp2html <%PAGETITLE></title>
+		<title><%PAGETITLE></title>
 		<style type="text/css">
 			html, body{	margin: 0; padding: 0; /*height: 100%;*/ }
 			img{ display: block; margin: 0 auto; position: relative; z-index: 1; }

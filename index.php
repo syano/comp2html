@@ -6,15 +6,18 @@
 		<meta http-equiv="Content-Style-Type" content="text/css">
 		<title>comp2html</title>
 		<style type="text/css">
+			h1 a{ font-size: 0.5em; text-decoration: none; }
 			#inputBtn{ border: gray solid 0.5em; padding: 10em; }
 		</style>
 	</head>
 	<body>
-		<h1>comp2html</h1>
+		<h1>comp2html v0.3<a href="./log.html" target="_blank">（更新履歴）</a></h1>
 		<hr>
 	    <h2>画像選択：ダイアログ / ドラッグ&ドロップ</h2>
 		<form id="uploadForm" name="form1" method="post" action="upload.php" enctype="multipart/form-data">
 		    <input id="inputBtn" type="file" name="image_file[]" multiple="multiple" accept="image/*"/>
+		    <p>　　　↓</p>　
+		    <input class="addName" type="input" name="folder_name" />
 		    <p>　　　↓</p>　
 		    <input class="submitBtn" type="submit" value="htmlへ変換" />
 		</form>
